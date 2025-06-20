@@ -1,3 +1,11 @@
 .pdm-python
 .venv/
 __pypackages__/
+# Ignore distribution archives
+dist.zip
+
+# Ignore IntelliJ / PyCharm project files
+.idea/
+
+# Ignore the build distribution directory
+dist/
