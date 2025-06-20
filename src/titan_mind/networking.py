@@ -4,7 +4,7 @@ _titan_engage_base_base_url = 'https://devtitanmind.thesalarybox.co'
 _titan_engage_base_url = f'{_titan_engage_base_base_url}/api/'
 
 titan_engage_token = ""
-titan_engage_business_code = "LRG5V0"
+titan_engage_business_code = ""
 
 
 def get_titan_engage_headers() -> dict:
@@ -23,6 +23,11 @@ def get_titan_engage_url(endpoint: str):
 def set_titan_engage_token(token: str):
     global titan_engage_token
     titan_engage_token = token
+
+
+def set_titan_engage_business_code(code: str):
+    global titan_engage_business_code
+    titan_engage_business_code = code
 
 
 def print_request_and_response(response):
@@ -75,4 +80,3 @@ def print_request_and_response(response):
     print("\n")
 
     return response
-

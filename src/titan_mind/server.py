@@ -8,7 +8,7 @@ from titan_mind.engage import \
     register_a_whatsapp_message_template_for_approval_to_send_first_message_to_a_phone_number_in_te, \
     get_is_the_whatsapp_message_template_approved_in_te, \
     send_a_whatsapp_message_to_a_phone_number_for_the_first_time_using_a_approved_whatsapp_message_template_in_te
-from titan_mind.networking import set_titan_engage_token
+from titan_mind.networking import set_titan_engage_token, set_titan_engage_business_code
 from titan_mind.whatsapp import get_whatsapp_recent_conversations_from_titan_mind, \
     send_whatsapp_message_to_a_conversation_from_titan_mind
 from fastmcp.server.dependencies import get_http_request
@@ -24,7 +24,9 @@ def get_and_set_the_auth_token(func: Callable) -> Callable:
     def wrapper(*args, **kwargs):
         request: StarletteRequest = get_http_request()
         auth_token = request.headers.get("auth-token")
+        business_code = request.headers.get("bus-code")
         set_titan_engage_token(auth_token)
+        set_titan_engage_business_code(business_code)
 
         return func(*args, **kwargs)
 
