@@ -1,33 +1,23 @@
 import json
 
+from titan_mind.utils.app_specific.mcp import get_the_api_key, get_the_business_code
+
+# _titan_engage_base_base_url = 'https://api.titanmind.so'
 _titan_engage_base_base_url = 'https://devtitanmind.thesalarybox.co'
 _titan_engage_base_url = f'{_titan_engage_base_base_url}/api/'
-
-titan_engage_token = ""
-titan_engage_business_code = ""
 
 
 def get_titan_engage_headers() -> dict:
     return {
         'accept': 'application/json, text/plain, */*',
         'content-type': 'application/json',
-        'authorization': f'Bearer {titan_engage_token}',
-        'x-business-code': f'{titan_engage_business_code}',
+        'authorization': f'API-Key {get_the_api_key()}',
+        'x-business-code': f'{get_the_business_code()}',
     }
 
 
 def get_titan_engage_url(endpoint: str):
     return f"{_titan_engage_base_url}{endpoint}"
-
-
-def set_titan_engage_token(token: str):
-    global titan_engage_token
-    titan_engage_token = token
-
-
-def set_titan_engage_business_code(code: str):
-    global titan_engage_business_code
-    titan_engage_business_code = code
 
 
 def print_request_and_response(response):

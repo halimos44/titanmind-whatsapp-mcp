@@ -1,177 +1,243 @@
-from contextvars import ContextVar
-from functools import wraps
+import os
 from typing import Optional, Dict, Any, Callable
 
 from fastmcp import FastMCP
 
-from titan_mind.engage import \
-    register_a_whatsapp_message_template_for_approval_to_send_first_message_to_a_phone_number_in_te, \
-    get_is_the_whatsapp_message_template_approved_in_te, \
-    send_a_whatsapp_message_to_a_phone_number_for_the_first_time_using_a_approved_whatsapp_message_template_in_te
-from titan_mind.networking import set_titan_engage_token, set_titan_engage_business_code
-from titan_mind.whatsapp import get_whatsapp_recent_conversations_from_titan_mind, \
-    send_whatsapp_message_to_a_conversation_from_titan_mind
-from fastmcp.server.dependencies import get_http_request
-from starlette.requests import Request as StarletteRequest
+from titan_mind import titan_mind_functions as titan_mind_functions
+from titan_mind.titan_mind_functions import Contact
+from dotenv import load_dotenv
 
-mcp = FastMCP("TitanMind Whatsapp MCP", stateless_http=True)
+load_dotenv()
+
+# todo - atm below workflow is attached to every tool description, which is not recommended, but fastmcp and the claude desktop client are not able to share system instructions well. so for now appending the instructions to the tools context also
+
+_titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow = \
+    """
+    TITANMIND WHATSAPP WORKFLOW:
+    
+    FREE-FORM (24hr window):
+       1. Any content allowed
+       2. Only after user's have sent a message in the last 24 hours
+    
+    TEMPLATES (outside 24hr window):
+       1. Pre-approved structured content
+       2. Required for new conversations
+       
+    PROCESS:
+       1. Check receiver phone number free form messaging window status
+       2. Free form messaging window for a receiver, can be checked by fetching conversations, and if a conversation with the receiver phone number exists and also if a message from receiver("sender_type" as "customer") exists in the last 24 hours then reeiver is in free form messaging window.
+       2. Use free-form OR register template
+       3. Wait for template approval (if needed)
+       4. Send message  
+       5. check the conversation, if the receiver received message successfully
+    """
+
+_tool_return_object_description: str = \
+    """
+    Each tool Returns:
+            a boolean if the tool was able to perform the api call successfully against the key "status"
+            a string containing the message or error if the function ran successfully or not against the key "message"
+            a dict containing the response according to the tool functionality or error details if the tool ran into an exception, against the key "result"
+    """
+
+_mcp_name = "TitanMind Whatsapp MCP - Handles free-form messages (24hr window) and template workflows automatically"
+
+mcp = FastMCP(
+    _mcp_name,
+    instructions=_titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow + _tool_return_object_description,
+)
 
 
-# mcp = FastMCP("TitanMind Whatsapp MCP")
+@mcp.prompt()
+def whatsapp_and_server_workflow() -> str:
+    """WhatsApp messaging workflow guide, and server tools return info"""
+    return _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow + _tool_return_object_description
 
-def get_and_set_the_auth_token(func: Callable) -> Callable:
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        request: StarletteRequest = get_http_request()
-        auth_token = request.headers.get("auth-token")
-        business_code = request.headers.get("bus-code")
-        set_titan_engage_token(auth_token)
-        set_titan_engage_business_code(business_code)
 
-        return func(*args, **kwargs)
+@mcp.prompt()
+def send_whatsapp_message() -> str:
+    """WhatsApp messaging workflow guide, and server tools return info"""
+    return _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow + _tool_return_object_description
 
-    return wrapper
+
+@mcp.resource("resource://workflow")
+def whatsapp_and_server_workflow_resource() -> str:
+    """WhatsApp messaging workflow guide, and server tools return info"""
+    return _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow + _tool_return_object_description
 
 
 @mcp.tool()
-@get_and_set_the_auth_token
-def get_whatsapp_recent_conversations_tool() -> Optional[Dict[str, Any]]:
-    """
-    gets the recent conversations in the titan messages's whatsapp channel
+def get_conversations_from_the_last_day() -> Optional[Dict[str, Any]]:
+    ("""
+    get all the conversation where there have been the last message sent or received in the last 24 hours.
+    """ + _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow)
 
-    Args:
-    Returns:
-        a boolean if the message was sent successfully against key "status"
-        a string containing the message or error if the message was not sent successfully against the key "message"
-        a List of conversations of whatsapp channel in TitanMind or error details against key "result"
-    """
-    return get_whatsapp_recent_conversations_from_titan_mind()
+    return titan_mind_functions.get_conversations_from_the_last_day()
 
 
 @mcp.tool()
-@get_and_set_the_auth_token
-def send_whatsapp_message_to_a_conversation(conversation_id: str, message: str) -> Optional[Dict[str, Any]]:
-    """
-    sends a whatsapp message to a phone number using TitanMind.
+def get_the_messages_of_a_conversation_(conversation_id: str) -> Optional[Dict[str, Any]]:
+    ("""
+    gets the messages in a conversation.
 
     Args:
         conversation_id (str): alphanumeric id of the whatsapp conversation, to which a message is required to be sent.
         message (str): the message to send.
-    Returns:
-        a boolean if the message was sent successfully against key "status"
-        a string containing the message or error if the message was not sent successfully against the key "message"
-        a dict with response details or error details against the key "result
-    """
+    """ + _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow)
 
-    return send_whatsapp_message_to_a_conversation_from_titan_mind(
+    return titan_mind_functions.get_the_conversation_messages(
+        conversation_id
+    )
+
+
+@mcp.tool()
+def send_whatsapp_message_to_a_conversation(conversation_id: str, message: str) -> Optional[Dict[str, Any]]:
+    ("""
+    sends a whatsapp message to a Titanmind's whatsapp conversation.
+
+    Args:
+        conversation_id (str): id of the whatsapp conversation.
+        message (str): the message to send.
+    """ + _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow)
+
+    return titan_mind_functions.send_whatsapp_message_to_a_conversation(
         conversation_id, message
     )
 
 
-messaging_on_whatsapp_channel_requirements_and_functionality_documentation = \
-    """product Documentation: to send a message on whatsapp channel using TitanMind to a phone number for the very first time,
-     Step 1: It is required that the message is first registered as a template and then approved. 
-     Step 2: After the template is created, it takes some time for it to get approved. 
-     Step 3: An Approved template can be used to send a message on whatsapp channel to a phone number for the very first time.
-      """
-
-
 @mcp.tool()
-@get_and_set_the_auth_token
-def register_msg_template_for_approval_to_send_first_time_to_number(
-        template_name: str, message_content_components: list[dict[str, Any]]
+def register_msg_template_for_approval(
+        template_name: str,
+        message_content_components: list[dict[str, Any]],
+        language: str = "en", category: str = "MARKETING",
 ) -> Optional[Dict[str, Any]]:
     """
-    creates a new whatsapp message template, This is the step 1 of the description given next
-    """ + messaging_on_whatsapp_channel_requirements_and_functionality_documentation + """
+    creates and registers a new whatsapp message template for approval.
     Args:
-        template_name (str): name of the whatsapp message template, It only accepts a word without no special characters only underscores
+        template_name (str): name of the whatsapp message template, It only accepts a single word without no special characters except underscores
+        language (str): language of the whatsapp message template (default is "en")
+        category (str): category of the whatsapp message template (default is "MARKETING"), other possible values are "UTILITY", "AUTHENTICATION"
         message_content_components (dict): the message content that needs to be sent. It needs to be structured like the below example, 
-        components are required to have BODY component for the very least like this: {"type": "BODY", "text": "lorem body text"}, BODY component is for the simple text.
-        All other components are optional. message_content_components value will all type of components is mentioned below.
+        components are required to have BODY component at least, like this: {"type": "BODY", "text": "lorem body text"}, BODY component is for the simple text.
+        All other components are optional. 
+        HEADER component can have any of the below format, but only one format at a time can be used.: TEXT(the header component with TEXT needs to be like this
+        {
+        "type": "HEADER",
+        "format": "TEXT",
+        "text": "lorem header text"
+        }
+        ), VIDEO(the header component with VIDEO needs to be like this
+        {
+         "type":"HEADER",
+         "format":"VIDEO",
+         "example":{
+            "header_handle":[
+               "https://sample_video_url.jpg"
+            ]
+         }
+        }
+        )
+        , IMAGE(the header component with IMAGE needs to be like this 
+        {
+         "type":"HEADER",
+         "format":"IMAGE",
+         "example":{
+            "header_handle":[
+               "https://sample_image_url.jpg"
+            ]
+         }
+        }),
+       DOCUMENT (the header component with DOCUMENT needs to be like this 
+        {
+         "type":"HEADER",
+         "format":"DOCUMENT",
+         "example":{
+            "header_handle":[
+               "https://sample_document_url"
+            ]
+         }
+      }),
+        message_content_components value with all other type of components is mentioned below.
             [
                     {
-    "type": "HEADER",
+                        "type": "HEADER",
                         "format": "TEXT",
                         "text": "lorem header text"
                     },
                     {
-    "type": "BODY",
+                        "type": "BODY",
                         "text": "lorem body text"
                     },
                     {
-    "type": "FOOTER",
+                        "type": "FOOTER",
                         "text": "lorem footer text"
                     },
                     {
-    "type": "BUTTONS",
+                        "type": "BUTTONS",
                         "buttons": [
                             {
-    "type": "QUICK_REPLY",
+                                "type": "QUICK_REPLY",
                                 "text": "lorem reply bt"
+                            },
+                            {
+                              "type": "URL",
+                              "text": "cta",
+                              "url": "https:sample.in"
+                            },
+                            {
+                              "type": "PHONE_NUMBER",
+                              "text": "call ",
+                              "phone_number": "IN328892398"
                             }
                         ]
                     }
                 ]
-                
-    Returns:
-        a boolean if the template was sent successfully registered for approval against the key "status"
-        a string containing the message or error if the function ran successfully against the key "message"
-        a dict containing the registered template id and other details or error details against the key "result"
+        Buttons need to follow order of first QUICK_REPLY, then URL, and then PHONE_NUMBER.
     """
 
-    return register_a_whatsapp_message_template_for_approval_to_send_first_message_to_a_phone_number_in_te(
-        template_name, message_content_components
+    return titan_mind_functions.register_msg_template_for_approval(
+        template_name, language, category, message_content_components
     )
 
 
 @mcp.tool()
-@get_and_set_the_auth_token
-def get_if_the_whatsapp_message_template_approved(
-        template_name: str,
+def get_the_templates(
+        template_name: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
-    f"""
-    checks if the whatsapp message template is approved and ready to be sent as a message to a phone number for the very first time,
-    {messaging_on_whatsapp_channel_requirements_and_functionality_documentation}
-
+    (f"""
+    gets all the created templates with the details like approved/pending status 
+    
     Args:
-        template_name (str): name of the whatsapp message template, It only accepts a word without no special characters only underscores
-                
-    Returns:
-        a boolean if the template is approved against the key "status"
-        a string containing the message or error if the function ran successfully against the key "message"
-        a dict containing the registered template and other details or error details against the key "result"
-    """
-    return get_is_the_whatsapp_message_template_approved_in_te(
+        template_name (Optional[str]): name of the whatsapp message template, It only accepts a word without no special characters only underscores. It is optional do not provide any value.
+    """ + _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow)
+    return titan_mind_functions.get_the_templates(
         template_name
     )
 
 
 @mcp.tool()
-@get_and_set_the_auth_token
-def send_message_to_a_number_for_first_time_using_approved_template(
-        template_name: str, dialer_code: str, phone_without_dialer_code: str,
+def send_a_message_to_multiple_numbers_using_approved_template(
+        template_id: str, contacts: list[Contact],
 ) -> Optional[Dict[str, Any]]:
-    f"""
-    sends a message to a phone number for the very first time using an approved whatsapp template,
-    {messaging_on_whatsapp_channel_requirements_and_functionality_documentation}
-
+    (f"""
+    sends a message to a phone number using an approved whatsapp template.
+    
     Args:
-        template_name (str): name of the whatsapp message template, It only accepts a word without no special characters only underscores
-        dialer_code (str): dialer code of the phone number
-        phone_without_dialer_code (str): phone number without dialer code
-                
-    Returns:
-        a dict containing of the details of the template sent or error details
-    """
-    return send_a_whatsapp_message_to_a_phone_number_for_the_first_time_using_a_approved_whatsapp_message_template_in_te(
-        template_name, dialer_code, phone_without_dialer_code
+        template_id (str): id of the whatsapp message template.
+        contacts (Contact): a contact has three attributes: country_code_alpha(like "IN" for india), dialer_code and phone_without_dialer_code
+    """ + _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow)
+    return titan_mind_functions.send_message_to_a_number_using_approved_template(
+        template_id, contacts
     )
 
 
+
 def main():
-    # mcp.run()
-    mcp.run(transport="streamable-http", host="0.0.0.0", port=8010)
+    run_in_remote_server_mode = os.getenv("RUN_REMOTE_SERVER_MODE", False)
+    if run_in_remote_server_mode:
+        mcp.run(transport="streamable-http", host="0.0.0.0", port=8010)
+    else:
+        mcp.run()
 
 
 if __name__ == "__main__":
