@@ -6,7 +6,7 @@ A WhatsApp marketing and messaging tool MCP (Model Control Protocol) service usi
 
 This service provides all the WhatsApp marketing and messaging functionalities using Titanmind. Includes features like template creation and registration with all components header, body, CTAs.., template broadcast to phone numbers in bulk. Read and send messages in a active conversation.
 
-> This MCP utilizes Titanmind. And account on Titanmind is a dependency to use this MCP. 
+> This MCP utilizes Titanmind. Account on Titanmind is a dependency to use this MCP. 
   
 
 ## Features
@@ -176,7 +176,7 @@ In any MCP Client like Claude or Cursor, Titanmind whatsapp MCP config can be ad
 
 #### Python package Titanmind MCP
 
-at https://pypi.org/project/titan-mind-whatsapp-mcp/0.1.0/
+at [https://pypi.org/project/titan-mind-whatsapp-mcp/0.1.0/](https://pypi.org/project/titan-mind-whatsapp-mcp/0.1.0/)
 
 ## Development
 
