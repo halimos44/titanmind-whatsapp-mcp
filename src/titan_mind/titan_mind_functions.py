@@ -21,7 +21,7 @@ def get_conversations_from_the_last_day(
     }
     if phone_without_dialer_code and phone_without_dialer_code.lower() not in ["none", "null"]:
         print(f"phone_without_dialer_code {phone_without_dialer_code}")
-        payload["title__contains"] = phone_without_dialer_code
+        payload["title__icontains"] = phone_without_dialer_code
     return asdict(
         TitanMindAPINetworking().make_request(
             endpoint=f"msg/conversations/",
