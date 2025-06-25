@@ -2,8 +2,7 @@ import json
 
 from titan_mind.utils.app_specific.mcp import get_the_api_key, get_the_business_code
 
-# _titan_engage_base_base_url = 'https://api.titanmind.so'
-_titan_engage_base_base_url = 'https://devtitanmind.thesalarybox.co'
+_titan_engage_base_base_url = 'https://api.titanmind.so'
 _titan_engage_base_url = f'{_titan_engage_base_base_url}/api/'
 
 

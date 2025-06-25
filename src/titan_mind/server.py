@@ -25,7 +25,7 @@ _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow = \
        
     PROCESS:
        1. Check receiver phone number free form messaging window status
-       2. Free form messaging window for a receiver, can be checked by fetching conversations, and if a conversation with the receiver phone number exists and also if a message from receiver("sender_type" as "customer") exists in the last 24 hours then reeiver is in free form messaging window.
+       2. A receiver is in the free-form messaging window if a conversation with their phone number already exists and also the receiver have sent a message within the last 24 hours.
        2. Use free-form OR register template
        3. Wait for template approval (if needed)
        4. Send message  
