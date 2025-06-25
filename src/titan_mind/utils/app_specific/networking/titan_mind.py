@@ -4,6 +4,7 @@ from enum import Enum
 import requests
 
 from titan_mind.networking import get_titan_engage_headers, get_titan_engage_url, print_request_and_response
+from titan_mind.utils.app_specific.utils import is_the_mcp_to_run_in_server_mode_or_std_dio
 
 
 # Enums for HTTP methods
@@ -58,7 +59,9 @@ class TitanMindAPINetworking:
                     message=f"Unsupported HTTP method: {method.value}",
                 )
 
-            print_request_and_response(response)
+            if is_the_mcp_to_run_in_server_mode_or_std_dio():
+                # for some reason in stdio mode the printing json for a specific api is breaking the whole tool call, for so now disabling it for this mode
+                print_request_and_response(response)
             response.raise_for_status()
 
             response_data = response.json()
@@ -71,7 +74,7 @@ class TitanMindAPINetworking:
             return BaseResponse(
                 status=True,
                 message=success_message,
-                result= self.get_result_dict(response_data),
+                result=self.get_result_dict(response_data),
             )
 
         except requests.exceptions.HTTPError as e:
@@ -109,5 +112,3 @@ class TitanMindAPINetworking:
 
     def get_result_dict(self, response_data):
         return response_data.get("result", response_data)
-
-

@@ -1,5 +1,5 @@
 import os
-from typing import Optional, Dict, Any, Callable
+from typing import Optional, Dict, Any, Callable, Annotated
 
 from fastmcp import FastMCP
 
@@ -8,7 +8,8 @@ from titan_mind.titan_mind_functions import Contact
 from titan_mind.utils.app_specific.utils import is_the_mcp_to_run_in_server_mode_or_std_dio
 
 # todo - atm below workflow is attached to every tool description, which is not recommended, but fastmcp and the claude desktop client are not able to share system instructions well. so for now appending the instructions to the tools context also
-
+# todo - give straightforward API or tool to determine if the receiver is in the free form window or not
+# todo - LLM are not following the usage instructions so need to update descriptions and check if mcp has other construct for it. the usage instruction given of --> checking if the the receiver have sent a message within the last 24 hours. and after sending the message check if the receiver recieved it or not.
 _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow = \
     """
     TITANMIND WHATSAPP WORKFLOW:
@@ -65,12 +66,19 @@ def whatsapp_and_server_workflow_resource() -> str:
 
 
 @mcp.tool()
-def get_conversations_from_the_last_day() -> Optional[Dict[str, Any]]:
+def get_conversations_from_the_last_day(
+        phone_without_dialer_code: str = "None"
+) -> Optional[Dict[str, Any]]:
     ("""
     get all the conversation where there have been the last message sent or received in the last 24 hours.
+    
+    Args:
+        phone_without_dialer_code (str): to filter conversation with a phone number. default is "None" to get all conversations.
     """ + _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow)
 
-    return titan_mind_functions.get_conversations_from_the_last_day()
+    return titan_mind_functions.get_conversations_from_the_last_day(
+        phone_without_dialer_code
+    )
 
 
 @mcp.tool()
@@ -200,16 +208,20 @@ def register_msg_template_for_approval(
 
 @mcp.tool()
 def get_the_templates(
-        template_name: Optional[str] = None,
+        template_name: str = "None",
+        page: int = 1,
+        page_size: int = 10,
 ) -> Optional[Dict[str, Any]]:
-    (f"""
+    ("""
     gets all the created templates with the details like approved/pending status 
     
     Args:
-        template_name (Optional[str]): name of the whatsapp message template, It only accepts a word without no special characters only underscores. It is optional do not provide any value.
+        template_name (str): name of the whatsapp message template, It only accepts a word without no special characters only underscores. Default is "None" to get all the templates
+        page (int): page refers to the page in paginated api. default is 1 
+        page_size (int): page_size refers to the page_size in paginated api. default is 25 
     """ + _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow)
     return titan_mind_functions.get_the_templates(
-        template_name
+        template_name, page, page_size
     )
 
 
@@ -217,7 +229,7 @@ def get_the_templates(
 def send_a_message_to_multiple_numbers_using_approved_template(
         template_id: int, contacts: list[Contact],
 ) -> Optional[Dict[str, Any]]:
-    (f"""
+    ("""
     sends a message to a phone number using an approved whatsapp template.
     
     Args:

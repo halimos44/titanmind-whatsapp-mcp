@@ -1,4 +1,4 @@
-# Titanmin WhatsApp MCP
+# Titanmind WhatsApp MCP
 
 A WhatsApp marketing and messaging tool MCP (Model Control Protocol) service using [Titanmind](https://www.titanmind.so/). Handles free-form messages (24hr window) and template workflows automatically
 
@@ -6,7 +6,7 @@ A WhatsApp marketing and messaging tool MCP (Model Control Protocol) service usi
 
 This service provides all the WhatsApp marketing and messaging functionalities using Titanmind. Includes features like template creation and registration with all components header, body, CTAs.., template broadcast to phone numbers in bulk. Read and send messages in a active conversation.
 
-> This MCP utilizes Titanmind. Account on Titanmind is a dependency to use this MCP. 
+> This MCP utilizes Titanmind. Titanmind Account is a requirement to use this MCP. 
   
 
 ## Features

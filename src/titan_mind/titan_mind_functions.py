@@ -9,18 +9,25 @@ from titan_mind.utils.app_specific.networking.titan_mind import TitanMindAPINetw
 from titan_mind.utils.general.date_time import get_date_time_to_utc_server_time_format_string
 
 
-def get_conversations_from_the_last_day() -> Optional[Dict[str, Any]]:
+# todo - it only returns 10 since page size is not given, rather than improving it add filter for search by phone number
+def get_conversations_from_the_last_day(
+        phone_without_dialer_code: str = "None"
+) -> Optional[Dict[str, Any]]:
     yesterday_datetime = datetime.now() - timedelta(days=1)
+    payload = {
+        "page": 1,
+        "channel": "whatsapp",
+        "last_message_at__gte": get_date_time_to_utc_server_time_format_string(yesterday_datetime)
+    }
+    if phone_without_dialer_code and phone_without_dialer_code.lower() not in ["none", "null"]:
+        print(f"phone_without_dialer_code {phone_without_dialer_code}")
+        payload["title__contains"] = phone_without_dialer_code
     return asdict(
         TitanMindAPINetworking().make_request(
             endpoint=f"msg/conversations/",
             success_message="last 24 hours conversations fetched.",
             method=HTTPMethod.GET,
-            payload={
-                "page": 1,
-                "channel": "whatsapp",
-                "last_message_at__gte": get_date_time_to_utc_server_time_format_string(yesterday_datetime)
-            }
+            payload=payload
         )
     )
 
@@ -73,12 +80,16 @@ def register_msg_template_for_approval(
 
 
 def get_the_templates(
-        template_name: Optional[str]
+        template_name: str = "None",
+        page: int = 1,
+        page_size: int = 10,
 ):
     payload = {
         "channel": "whatsapp",
+        "page": page,
+        "page_size": page_size
     }
-    if template_name is not None:
+    if template_name is not None and template_name.lower() not in ["none", "null"]:
         payload["name__icontains"] = template_name
 
     return asdict(
