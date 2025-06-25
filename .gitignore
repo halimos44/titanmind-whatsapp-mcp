@@ -9,3 +9,5 @@ dist.zip
 
 # Ignore the build distribution directory
 dist/
+
+.env
