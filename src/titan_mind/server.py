@@ -217,14 +217,14 @@ def get_the_templates(
 
 @mcp.tool()
 def send_a_message_to_multiple_numbers_using_approved_template(
-        template_id: str, contacts: list[Contact],
+        template_id: int, contacts: list[Contact],
 ) -> Optional[Dict[str, Any]]:
     (f"""
     sends a message to a phone number using an approved whatsapp template.
     
     Args:
-        template_id (str): id of the whatsapp message template.
-        contacts (Contact): a contact has three attributes: country_code_alpha(like "IN" for india), dialer_code and phone_without_dialer_code
+        template_id (str): id of the whatsapp message template, it is not the template name.
+        contacts (Contact): a contact has three attributes: country_code_alpha(like "IN" for india), country_code(like "91") and phone_without_dialer_code
     """ + _titan_mind_product_whatsapp_channel_messaging_functionality_and_workflow)
     return titan_mind_functions.send_message_to_a_number_using_approved_template(
         template_id, contacts
@@ -235,7 +235,7 @@ def send_a_message_to_multiple_numbers_using_approved_template(
 def main():
     run_in_remote_server_mode = os.getenv("RUN_REMOTE_SERVER_MODE", False)
     if run_in_remote_server_mode:
-        mcp.run(transport="streamable-http", host="0.0.0.0", port=8010)
+        mcp.run(transport="streamable-http", host="0.0.0.0", port=3000)
     else:
         mcp.run()
 

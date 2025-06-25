@@ -93,19 +93,19 @@ def get_the_templates(
 
 class Contact(BaseModel):
     country_code_alpha: str
-    dialer_code: str
-    phone_without_dialer_code: str
+    country_code: str
+    phone_without_country_code: str
 
 
 def send_message_to_a_number_using_approved_template(
-        template_id: str,
+        template_id: int,
         contacts: list[Contact],
 ):
     return asdict(
         TitanMindAPINetworking().make_request(
             endpoint=f"whatsapp/message/send-template/",
             payload={
-                "recipients": contacts,
+                "recipients": [contact.model_dump() for contact in contacts],
                 "template": template_id,
             },
             success_message="message sent request created.",
