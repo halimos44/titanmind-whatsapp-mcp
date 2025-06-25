@@ -5,9 +5,7 @@ from fastmcp import FastMCP
 
 from titan_mind import titan_mind_functions as titan_mind_functions
 from titan_mind.titan_mind_functions import Contact
-from dotenv import load_dotenv
-
-load_dotenv()
+from titan_mind.utils.app_specific.utils import is_the_mcp_to_run_in_server_mode_or_std_dio
 
 # todo - atm below workflow is attached to every tool description, which is not recommended, but fastmcp and the claude desktop client are not able to share system instructions well. so for now appending the instructions to the tools context also
 
@@ -233,8 +231,7 @@ def send_a_message_to_multiple_numbers_using_approved_template(
 
 
 def main():
-    run_in_remote_server_mode = os.getenv("RUN_REMOTE_SERVER_MODE", False)
-    if run_in_remote_server_mode:
+    if is_the_mcp_to_run_in_server_mode_or_std_dio():
         mcp.run(transport="streamable-http", host="0.0.0.0", port=3000)
     else:
         mcp.run()
