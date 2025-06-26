@@ -176,7 +176,7 @@ In any MCP Client like Claude or Cursor, Titanmind whatsapp MCP config can be ad
 
 #### Python package Titanmind MCP
 
-at [https://pypi.org/project/titan-mind-whatsapp-mcp/0.1.0/](https://pypi.org/project/titan-mind-whatsapp-mcp/0.1.0/)
+at [https://pypi.org/project/titanmind-whatsapp-mcp/0.1.2/](https://pypi.org/project/titanmind-whatsapp-mcp/0.1.2/)
 
 ## Development
 
