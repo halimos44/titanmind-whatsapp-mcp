@@ -114,7 +114,7 @@ pipx ensurepath
       "command": "npx",
       "args": [
         "mcp-remote",
-        "http://mcp.titanmind.so/whatsapp/mcp/",
+        "https://mcp.titanmind.so/whatsapp/mcp/",
         "--header",
         "api-key:XXXXXXXXXXXXXXXXXXXXXXX",
         "--header",
