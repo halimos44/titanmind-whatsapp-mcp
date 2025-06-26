@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def is_the_mcp_to_run_in_server_mode_or_std_dio() -> bool:
+def to_run_mcp_in_server_mode_or_std_io() -> bool:
     print(f"is_the_mcp_to_run_in_server_mode_or_std_dio: {get_script_args().run_in_server_mode}")
     return get_script_args().run_in_server_mode
 

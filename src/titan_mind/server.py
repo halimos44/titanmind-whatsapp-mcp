@@ -6,7 +6,7 @@ from fastmcp import FastMCP
 
 from titan_mind import titan_mind_functions as titan_mind_functions
 from titan_mind.titan_mind_functions import Contact
-from titan_mind.utils.app_specific.utils import is_the_mcp_to_run_in_server_mode_or_std_dio, get_script_args
+from titan_mind.utils.app_specific.utils import to_run_mcp_in_server_mode_or_std_io, get_script_args
 
 # todo - atm below workflow is attached to every tool description, which is not recommended, but fastmcp and the claude desktop client are not able to share system instructions well. so for now appending the instructions to the tools context also
 # todo - give straightforward API or tool to determine if the receiver is in the free form window or not
@@ -243,7 +243,7 @@ def send_a_message_to_multiple_numbers_using_approved_template(
 
 
 def main():
-    if is_the_mcp_to_run_in_server_mode_or_std_dio():
+    if to_run_mcp_in_server_mode_or_std_io():
         mcp.run(transport="streamable-http", host="0.0.0.0", port=get_script_args().port)
     else:
         mcp.run()
