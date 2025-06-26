@@ -60,12 +60,11 @@ This service provides all the WhatsApp marketing and messaging functionalities u
 *   Python 3.10 or higher
 *   API Key and Business Code from [Titanmind](https://www.titanmind.so/)
 
-####   
-Usage with MCP Client
+### Usage with MCP Client
 
 In any MCP Client like Claude or Cursor, Titanmind whatsapp MCP config can be added following ways:
 
-Using [Titanmind WhatsApp MCP Python package](https://pypi.org/project/titanmind-whatsapp-mcp/0.1.2/)   
+#### Using [Titanmind WhatsApp MCP Python package](https://pypi.org/project/titanmind-whatsapp-mcp/0.1.2/)   
 1\. Install pipx to install the pyhton package globally
 
 ```plaintext
