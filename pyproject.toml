@@ -2,6 +2,11 @@
 requires = ["pdm-backend>=2.4.0"]
 build-backend = "pdm.backend"
 
+# To upload to pypi
+# use ```rm -rf dist/``` to clean build folder,
+# use ```python -m build``` to build
+# and use ```twine upload dist/*``` to upload the build
+
 [project]
 name = "titanmind-whatsapp-mcp"
 version = "0.1.4"
