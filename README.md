@@ -83,14 +83,14 @@ This service provides all the WhatsApp marketing and messaging functionalities u
 ### Install from PyPI
 
 ``` bash
-pip install titan-mind-whatsapp-mcp
+pip install titanmind-whatsapp-mcp
 
  ```
 
 Or use `uv`:
 
 ``` bash
-uv pip install titan-mind-whatsapp-mcp
+uv pip install titanmind-whatsapp-mcp
 
  ```
 
