@@ -4,7 +4,7 @@ A WhatsApp marketing and messaging tool MCP (Model Control Protocol) service usi
 
 ## Overview
 
-This service provides all the WhatsApp marketing and messaging functionalities using Titanmind. Includes features like template creation and registration with all components header, body, CTAs.., template broadcast to phone numbers in bulk. Read and send messages in a active conversation.
+This service provides all the WhatsApp marketing and messaging functionalities using Titanmind. Includes features like template creation and registration with all components header, body, CTAs.., template broadcast to phone numbers in bulk. Read and send messages in an active conversation.
 
 > This MCP utilizes Titanmind. Titanmind Account is a requirement to use this MCP.
 > 
@@ -65,10 +65,11 @@ This service provides all the WhatsApp marketing and messaging functionalities u
 In any MCP Client like Claude or Cursor, Titanmind whatsapp MCP config can be added following ways:
 
 #### Using [Titanmind WhatsApp MCP Python package](https://pypi.org/project/titanmind-whatsapp-mcp/0.1.2/)   
-1\. Install pipx to install the pyhton package globally
+1\. Install pipx to install the python package globally
 
 ```plaintext
-# bash
+# terminal
+
 # Install pipx first
 brew install pipx  # on macOS
 # or
@@ -79,12 +80,10 @@ pipx install titanmind-whatsapp-mcp
 
 # Make sure '/[HOME_DIR_OR_USER_PRFILE]/.local/bin' is on your PATH environment variable. Use pipx ensurepath to set it.
 pipx ensurepath 
-
-# Then in the
  
 ```
 
-2\. Set the python package MCP Config in the MCP Client's MCP Config Json file.
+2\. Set the MCP Config python package script in the MCP Client's MCP Configs Json file.
 
 ```plaintext
 {
@@ -172,8 +171,8 @@ uv pip install titanmind-whatsapp-mcp
 1\. Clone the repository:
 
 ```plaintext
-git clone https://github.com/TitanmindAGI/titan-mind-whatsapp-mcp
-cd titan-mind-whatsapp-mcp
+git clone https://github.com/TitanmindAGI/titanmind-whatsapp-mcp
+cd titanmind-whatsapp-mcp
 ```
 
 2\. Install dependencies:
