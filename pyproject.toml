@@ -20,6 +20,7 @@ dependencies = [
     "python-dotenv>=1.1.1"
 ]
 
+# command/script to run the whole package --> titan-mind-mcp. it directly runs the server file in src/titan_mind
 [project.scripts]
 titan-mind-mcp = "titan_mind.server:main"
 
